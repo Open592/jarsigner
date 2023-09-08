@@ -52,8 +52,8 @@ import java.util.Map.Entry;
 
 import jdk.internal.access.JavaUtilZipFileAccess;
 import jdk.internal.access.SharedSecrets;
-import jdk.security.jarsigner.JarSigner;
-import jdk.security.jarsigner.JarSignerException;
+import com.open592.jarsigner.JarSigner;
+import com.open592.jarsigner.JarSignerException;
 import sun.security.pkcs.PKCS7;
 import sun.security.pkcs.SignerInfo;
 import sun.security.timestamp.TimestampToken;
@@ -154,7 +154,7 @@ public class Main {
     char[] keypass; // private key password
     String sigfile; // name of .SF file
     String sigalg; // name of signature algorithm
-    String digestalg; // name of digest algorithm
+    List<String> digestalgs; // List of digest algorithms
     String signedjar; // output filename
     String tsaUrl; // location of the Timestamping Authority
     String tsaAlias; // alias for the Timestamping Authority's certificate
@@ -485,7 +485,7 @@ public class Main {
                 sigalg = args[n];
             } else if (collator.compare(flags, "-digestalg") ==0) {
                 if (++n == args.length) usageNoArg();
-                digestalg = args[n];
+                digestalgs.add(args[n]);
             } else if (collator.compare(flags, "-certs") ==0) {
                 showcerts = true;
             } else if (collator.compare(flags, "-strict") ==0) {
@@ -1151,13 +1151,13 @@ public class Main {
             if ((legacyAlg & 1) == 1) {
                 warnings.add(String.format(
                         rb.getString("The.1.algorithm.specified.for.the.2.option.is.considered.a.security.risk..This.algorithm.will.be.disabled.in.a.future.update."),
-                        digestalg, "-digestalg"));
+                        digestalgs, "-digestalg"));
             }
 
             if ((disabledAlg & 1) == 1) {
                 errors.add(String.format(
                         rb.getString("The.1.algorithm.specified.for.the.2.option.is.considered.a.security.risk.and.is.disabled."),
-                        digestalg, "-digestalg"));
+                        digestalgs, "-digestalg"));
             }
 
             if ((legacyAlg & 2) == 2) {
@@ -1408,6 +1408,12 @@ public class Main {
                 }
             }
         }
+    }
+
+    private void checkWeakSign(List<String> algs, Set<CryptoPrimitive> primitiveSet, boolean tsa) {
+        algs.forEach(alg -> {
+            checkWeakSign(alg, primitiveSet, tsa);
+        });
     }
 
     private void checkWeakSign(PrivateKey key) {
@@ -1691,10 +1697,10 @@ public class Main {
     void signJar(String jarName, String alias)
             throws Exception {
 
-        if (digestalg == null) {
-            digestalg = JarSigner.Builder.getDefaultDigestAlgorithm();
+        if (digestalgs.isEmpty()) {
+            digestalgs.add(JarSigner.Builder.getDefaultDigestAlgorithm());
         }
-        checkWeakSign(digestalg, DIGEST_PRIMITIVE_SET, false);
+        checkWeakSign(digestalgs, DIGEST_PRIMITIVE_SET, false);
 
         if (tSADigestAlg == null) {
             tSADigestAlg = JarSigner.Builder.getDefaultDigestAlgorithm();
@@ -1781,8 +1787,16 @@ public class Main {
             });
         }
 
-        if (digestalg != null) {
-            builder.digestAlgorithm(digestalg);
+        if (!digestalgs.isEmpty()) {
+            digestalgs.forEach(digestalg -> {
+                try {
+                    builder.digestAlgorithm(digestalg);
+                } catch (NoSuchAlgorithmException e) {
+                    if (debug) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
         if (sigalg != null) {
             builder.signatureAlgorithm(sigalg);
