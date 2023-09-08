@@ -154,7 +154,8 @@ public class Main {
     char[] keypass; // private key password
     String sigfile; // name of .SF file
     String sigalg; // name of signature algorithm
-    List<String> digestalgs; // List of digest algorithms
+    // List of digest algorithms
+    ArrayList<String> digestalgs = new ArrayList<>();
     String signedjar; // output filename
     String tsaUrl; // location of the Timestamping Authority
     String tsaAlias; // alias for the Timestamping Authority's certificate
