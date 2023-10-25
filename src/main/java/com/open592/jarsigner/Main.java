@@ -66,14 +66,14 @@ import sun.security.util.*;
 
 /**
  * <p>The jarsigner utility.
- *
+ * <p>
  * The exit codes for the main method are:
- *
+ * <p>
  * 0: success
  * 1: any error that the jar cannot be signed or verified, including:
- *      keystore loading error
- *      TSP communication error
- *      jarsigner command line error...
+ * keystore loading error
+ * TSP communication error
+ * jarsigner command line error...
  * otherwise: error codes from -strict
  *
  * @author Roland Schemers
@@ -86,6 +86,7 @@ public class Main {
             java.util.ResourceBundle.getBundle
                     ("com.open592.jarsigner.Resources");
     private static final Collator collator = Collator.getInstance();
+
     static {
         // this is for case insensitive string comparisions
         collator.setStrength(Collator.PRIMARY);
@@ -94,8 +95,8 @@ public class Main {
     private static final String NONE = "NONE";
     private static final String P11KEYSTORE = "PKCS11";
 
-    private static final long SIX_MONTHS = 180*24*60*60*1000L; //milliseconds
-    private static final long ONE_YEAR = 366*24*60*60*1000L;
+    private static final long SIX_MONTHS = 180 * 24 * 60 * 60 * 1000L; //milliseconds
+    private static final long ONE_YEAR = 366 * 24 * 60 * 60 * 1000L;
 
     private static final DisabledAlgorithmConstraints JAR_DISABLED_CHECK =
             new DisabledAlgorithmConstraints(
@@ -150,7 +151,7 @@ public class Main {
     List<String> providers = null; // list of provider names
     List<String> providerClasses = null; // list of provider classes
     // arguments for provider constructors
-    HashMap<String,String> providerArgs = new HashMap<>();
+    HashMap<String, String> providerArgs = new HashMap<>();
     char[] keypass; // private key password
     String sigfile; // name of .SF file
     String sigalg; // name of signature algorithm
@@ -230,7 +231,7 @@ public class Main {
 
             // Try to load and install the specified providers
             if (providers != null) {
-                for (String provName: providers) {
+                for (String provName : providers) {
                     try {
                         KeyStoreUtil.loadProviderByName(provName,
                                 providerArgs.get(provName));
@@ -246,7 +247,7 @@ public class Main {
 
             if (providerClasses != null) {
                 ClassLoader cl = ClassLoader.getSystemClassLoader();
-                for (String provClass: providerClasses) {
+                for (String provClass : providerClasses) {
                     try {
                         KeyStoreUtil.loadProviderByClass(provClass,
                                 providerArgs.get(provClass), cl);
@@ -343,7 +344,7 @@ public class Main {
 
         String confFile = null;
         String command = "-sign";
-        for (n=0; n < args.length; n++) {
+        for (n = 0; n < args.length; n++) {
             if (collator.compare(args[n], "-verify") == 0) {
                 command = "-verify";
             } else if (collator.compare(args[n], "-conf") == 0) {
@@ -368,7 +369,7 @@ public class Main {
                     Arrays.toString(args));
         }
 
-        for (n=0; n < args.length; n++) {
+        for (n = 0; n < args.length; n++) {
 
             String flags = args[n];
             String modifier = null;
@@ -376,7 +377,7 @@ public class Main {
             if (flags.startsWith("-")) {
                 int pos = flags.indexOf(':');
                 if (pos > 0) {
-                    modifier = flags.substring(pos+1);
+                    modifier = flags.substring(pos + 1);
                     flags = flags.substring(0, pos);
                 }
             }
@@ -393,13 +394,13 @@ public class Main {
             } else if (collator.compare(flags, "-keystore") == 0) {
                 if (++n == args.length) usageNoArg();
                 keystore = args[n];
-            } else if (collator.compare(flags, "-storepass") ==0) {
+            } else if (collator.compare(flags, "-storepass") == 0) {
                 if (++n == args.length) usageNoArg();
                 storepass = getPass(modifier, args[n]);
-            } else if (collator.compare(flags, "-storetype") ==0) {
+            } else if (collator.compare(flags, "-storetype") == 0) {
                 if (++n == args.length) usageNoArg();
                 storetype = args[n];
-            } else if (collator.compare(flags, "-providerName") ==0) {
+            } else if (collator.compare(flags, "-providerName") == 0) {
                 if (++n == args.length) usageNoArg();
                 providerName = args[n];
             } else if (collator.compare(flags, "-provider") == 0 ||
@@ -410,11 +411,11 @@ public class Main {
                 }
                 providerClasses.add(args[n]);
 
-                if (args.length > (n+1)) {
-                    flags = args[n+1];
+                if (args.length > (n + 1)) {
+                    flags = args[n + 1];
                     if (collator.compare(flags, "-providerArg") == 0) {
-                        if (args.length == (n+2)) usageNoArg();
-                        providerArgs.put(args[n], args[n+2]);
+                        if (args.length == (n + 2)) usageNoArg();
+                        providerArgs.put(args[n], args[n + 2]);
                         n += 2;
                     }
                 }
@@ -425,71 +426,71 @@ public class Main {
                 }
                 providers.add(args[n]);
 
-                if (args.length > (n+1)) {
-                    flags = args[n+1];
+                if (args.length > (n + 1)) {
+                    flags = args[n + 1];
                     if (collator.compare(flags, "-providerArg") == 0) {
-                        if (args.length == (n+2)) usageNoArg();
-                        providerArgs.put(args[n], args[n+2]);
+                        if (args.length == (n + 2)) usageNoArg();
+                        providerArgs.put(args[n], args[n + 2]);
                         n += 2;
                     }
                 }
-            } else if (collator.compare(flags, "-protected") ==0) {
+            } else if (collator.compare(flags, "-protected") == 0) {
                 protectedPath = true;
-            } else if (collator.compare(flags, "-certchain") ==0) {
+            } else if (collator.compare(flags, "-certchain") == 0) {
                 if (++n == args.length) usageNoArg();
                 altCertChain = args[n];
-            } else if (collator.compare(flags, "-tsapolicyid") ==0) {
+            } else if (collator.compare(flags, "-tsapolicyid") == 0) {
                 if (++n == args.length) usageNoArg();
                 tSAPolicyID = args[n];
-            } else if (collator.compare(flags, "-tsadigestalg") ==0) {
+            } else if (collator.compare(flags, "-tsadigestalg") == 0) {
                 if (++n == args.length) usageNoArg();
                 tSADigestAlg = args[n];
-            } else if (collator.compare(flags, "-debug") ==0) {
+            } else if (collator.compare(flags, "-debug") == 0) {
                 // Already processed
-            } else if (collator.compare(flags, "-keypass") ==0) {
+            } else if (collator.compare(flags, "-keypass") == 0) {
                 if (++n == args.length) usageNoArg();
                 keypass = getPass(modifier, args[n]);
-            } else if (collator.compare(flags, "-sigfile") ==0) {
+            } else if (collator.compare(flags, "-sigfile") == 0) {
                 if (++n == args.length) usageNoArg();
                 sigfile = args[n];
-            } else if (collator.compare(flags, "-signedjar") ==0) {
+            } else if (collator.compare(flags, "-signedjar") == 0) {
                 if (++n == args.length) usageNoArg();
                 signedjar = args[n];
-            } else if (collator.compare(flags, "-tsa") ==0) {
+            } else if (collator.compare(flags, "-tsa") == 0) {
                 if (++n == args.length) usageNoArg();
                 tsaUrl = args[n];
-            } else if (collator.compare(flags, "-tsacert") ==0) {
+            } else if (collator.compare(flags, "-tsacert") == 0) {
                 if (++n == args.length) usageNoArg();
                 tsaAlias = args[n];
-            } else if (collator.compare(flags, "-altsigner") ==0) {
+            } else if (collator.compare(flags, "-altsigner") == 0) {
                 if (++n == args.length) usageNoArg();
                 altSignerClass = args[n];
                 System.err.println(
                         rb.getString("This.option.is.forremoval") +
                                 "-altsigner");
-            } else if (collator.compare(flags, "-altsignerpath") ==0) {
+            } else if (collator.compare(flags, "-altsignerpath") == 0) {
                 if (++n == args.length) usageNoArg();
                 altSignerClasspath = args[n];
                 System.err.println(
                         rb.getString("This.option.is.forremoval") +
                                 "-altsignerpath");
-            } else if (collator.compare(flags, "-sectionsonly") ==0) {
+            } else if (collator.compare(flags, "-sectionsonly") == 0) {
                 signManifest = false;
-            } else if (collator.compare(flags, "-internalsf") ==0) {
+            } else if (collator.compare(flags, "-internalsf") == 0) {
                 externalSF = false;
-            } else if (collator.compare(flags, "-verify") ==0) {
+            } else if (collator.compare(flags, "-verify") == 0) {
                 verify = true;
-            } else if (collator.compare(flags, "-verbose") ==0) {
+            } else if (collator.compare(flags, "-verbose") == 0) {
                 verbose = (modifier != null) ? modifier : "all";
-            } else if (collator.compare(flags, "-sigalg") ==0) {
+            } else if (collator.compare(flags, "-sigalg") == 0) {
                 if (++n == args.length) usageNoArg();
                 sigalg = args[n];
-            } else if (collator.compare(flags, "-digestalg") ==0) {
+            } else if (collator.compare(flags, "-digestalg") == 0) {
                 if (++n == args.length) usageNoArg();
                 digestalgs.add(args[n]);
-            } else if (collator.compare(flags, "-certs") ==0) {
+            } else if (collator.compare(flags, "-certs") == 0) {
                 showcerts = true;
-            } else if (collator.compare(flags, "-strict") ==0) {
+            } else if (collator.compare(flags, "-strict") == 0) {
                 strict = true;
             } else if (collator.compare(flags, "-?") == 0 ||
                     collator.compare(flags, "-h") == 0 ||
@@ -698,14 +699,13 @@ public class Main {
     }
 
     void verifyJar(String jarName)
-            throws Exception
-    {
+            throws Exception {
         boolean anySigned = false;  // if there exists entry inside jar signed
         JarFile jf = null;
-        Map<String,String> digestMap = new HashMap<>();
-        Map<String,PKCS7> sigMap = new HashMap<>();
-        Map<String,String> sigNameMap = new HashMap<>();
-        Map<String,String> unparsableSignatures = new HashMap<>();
+        Map<String, String> digestMap = new HashMap<>();
+        Map<String, PKCS7> sigMap = new HashMap<>();
+        Map<String, String> sigNameMap = new HashMap<>();
+        Map<String, String> unparsableSignatures = new HashMap<>();
 
         try {
             jf = new JarFile(jarName, true);
@@ -775,7 +775,7 @@ public class Main {
             // The map to record display info, only used when -verbose provided
             //      key: signer info string
             //      value: the list of files with common key
-            Map<String,List<String>> output = new LinkedHashMap<>();
+            Map<String, List<String>> output = new LinkedHashMap<>();
 
             if (man != null) {
                 if (verbose != null) System.out.println();
@@ -818,8 +818,8 @@ public class Main {
                         sb = new StringBuffer();
                         boolean inManifest =
                                 ((man.getAttributes(name) != null) ||
-                                        (man.getAttributes("./"+name) != null) ||
-                                        (man.getAttributes("/"+name) != null));
+                                        (man.getAttributes("./" + name) != null) ||
+                                        (man.getAttributes("/" + name) != null));
                         sb.append(isSigned ? rb.getString("s") : rb.getString("SPACE"))
                                 .append(inManifest ? rb.getString("m") : rb.getString("SPACE"))
                                 .append(inStore ? rb.getString("k") : rb.getString("SPACE"))
@@ -834,7 +834,7 @@ public class Main {
                     // lines at the beginning and end.
                     if (isSigned) {
                         if (showcerts) sb.append('\n');
-                        for (CodeSigner signer: signers) {
+                        for (CodeSigner signer : signers) {
                             // signerInfo() must be called even if -verbose
                             // not provided. The method updates various
                             // warning flags.
@@ -894,7 +894,7 @@ public class Main {
                 }
             }
             if (verbose != null) {
-                for (Entry<String,List<String>> s: output.entrySet()) {
+                for (Entry<String, List<String>> s : output.entrySet()) {
                     List<String> files = s.getValue();
                     String key = s.getKey();
                     if (key.charAt(0) == '-') { // the signature-related group
@@ -902,13 +902,13 @@ public class Main {
                     }
                     int pipe = key.indexOf('|');
                     if (verbose.equals("all")) {
-                        for (String f: files) {
+                        for (String f : files) {
                             System.out.println(key.substring(0, pipe) + f);
-                            System.out.printf(key.substring(pipe+1));
+                            System.out.printf(key.substring(pipe + 1));
                         }
                     } else {
                         if (verbose.equals("grouped")) {
-                            for (String f: files) {
+                            for (String f : files) {
                                 System.out.println(key.substring(0, pipe) + f);
                             }
                         } else if (verbose.equals("summary")) {
@@ -916,12 +916,12 @@ public class Main {
                             if (files.size() > 1) {
                                 System.out.println(files.get(0) + " " +
                                         String.format(rb.getString(
-                                                ".and.d.more."), files.size()-1));
+                                                ".and.d.more."), files.size() - 1));
                             } else {
                                 System.out.println(files.get(0));
                             }
                         }
-                        System.out.printf(key.substring(pipe+1));
+                        System.out.printf(key.substring(pipe + 1));
                     }
                 }
                 System.out.println();
@@ -1305,7 +1305,7 @@ public class Main {
         }
 
         if (!isSigning && (!errors.isEmpty() || !warnings.isEmpty())) {
-            if (! (verbose != null && showcerts)) {
+            if (!(verbose != null && showcerts)) {
                 System.out.println();
                 System.out.println(rb.getString(
                         "Re.run.with.the.verbose.and.certs.options.for.more.details."));
@@ -1463,18 +1463,18 @@ public class Main {
 
     /**
      * Returns a string about a certificate:
-     *
+     * <p>
      * [<tab>] <cert-type> [", " <subject-DN>] [" (" <keystore-entry-alias> ")"]
      * [<validity-period> | <expiry-warning>]
      * [<key-usage-warning>]
-     *
+     * <p>
      * Note: no newline character at the end.
-     *
+     * <p>
      * This method sets global flags like hasExpiringCert, hasExpiredCert,
      * notYetValidCert, badKeyUsage, badExtendedKeyUsage, badNetscapeCertType,
      * hasExpiringTsaCert, hasExpiredTsaCert.
      *
-     * @param isTsCert true if c is in the TSA cert chain, false otherwise.
+     * @param isTsCert   true if c is in the TSA cert chain, false otherwise.
      * @param checkUsage true to check code signer keyUsage
      */
     String printCert(boolean isTsCert, String tab, Certificate c,
@@ -1598,7 +1598,7 @@ public class Main {
                 if (bad[0] || bad[1] || bad[2]) {
                     String x = "";
                     if (bad[0]) {
-                        x ="KeyUsage";
+                        x = "KeyUsage";
                     }
                     if (bad[1]) {
                         if (x.length() > 0) x = x + ", ";
@@ -1625,13 +1625,13 @@ public class Main {
             signTimeForm =
                     new MessageFormat(rb.getString("entry.was.signed.on"));
         }
-        Object[] source = { timestamp.getTimestamp() };
+        Object[] source = {timestamp.getTimestamp()};
 
         return new StringBuilder().append(tab).append("[")
                 .append(signTimeForm.format(source)).append("]").toString();
     }
 
-    private Map<CodeSigner,Integer> cacheForInKS = new IdentityHashMap<>();
+    private Map<CodeSigner, Integer> cacheForInKS = new IdentityHashMap<>();
 
     private int inKeyStoreForOneSigner(CodeSigner signer) {
         if (cacheForInKS.containsKey(signer)) {
@@ -1685,7 +1685,7 @@ public class Main {
 
         int output = 0;
 
-        for (CodeSigner signer: signers) {
+        for (CodeSigner signer : signers) {
             int result = inKeyStoreForOneSigner(signer);
             output |= result;
         }
@@ -1733,8 +1733,8 @@ public class Main {
         for (int j = 0; j < sigfile.length(); j++) {
             char c = sigfile.charAt(j);
             if (!
-                    ((c>= 'A' && c<= 'Z') ||
-                            (c>= '0' && c<= '9') ||
+                    ((c >= 'A' && c <= 'Z') ||
+                            (c >= '0' && c <= '9') ||
                             (c == '-') ||
                             (c == '_'))) {
                 if (aliasUsed) {
@@ -1752,7 +1752,7 @@ public class Main {
         sigfile = tmpSigFile.toString();
 
         String tmpJarName;
-        if (signedjar == null) tmpJarName = jarName+".sig";
+        if (signedjar == null) tmpJarName = jarName + ".sig";
         else tmpJarName = signedjar;
 
         File jarFile = new File(jarName);
@@ -1762,7 +1762,7 @@ public class Main {
         try {
             zipFile = new ZipFile(jarName);
         } catch (IOException ioe) {
-            error(rb.getString("unable.to.open.jar.file.")+jarName, ioe);
+            error(rb.getString("unable.to.open.jar.file.") + jarName, ioe);
         }
 
         CertPath cp = CertificateFactory.getInstance("X.509")
@@ -1854,7 +1854,7 @@ public class Main {
         try {
             fos = new FileOutputStream(signedJarFile);
         } catch (IOException ioe) {
-            error(rb.getString("unable.to.create.")+tmpJarName, ioe);
+            error(rb.getString("unable.to.create.") + tmpJarName, ioe);
         }
 
         Throwable failedCause = null;
@@ -1943,7 +1943,7 @@ public class Main {
             // rename the original jar file, then the signed
             // one, then delete the original.
             if (!signedJarFile.renameTo(jarFile)) {
-                File origJar = new File(jarName+".orig");
+                File origJar = new File(jarName + ".orig");
 
                 if (jarFile.renameTo(origJar)) {
                     if (signedJarFile.renameTo(jarFile)) {
@@ -1978,7 +1978,7 @@ public class Main {
         return SignatureFileVerifier.isSigningRelated(name);
     }
 
-    Map<CodeSigner,String> cacheForSignerInfo = new IdentityHashMap<>();
+    Map<CodeSigner, String> cacheForSignerInfo = new IdentityHashMap<>();
 
     /**
      * Returns a string of signer info, with a newline at the end.
@@ -2006,10 +2006,10 @@ public class Main {
      * Fills info on certs and timestamp into a StringBuilder, sets
      * warning flags (through printCert) and validates cert chains.
      *
-     * @param tab1 spaces before the ">>> Signer" line
-     * @param tab2 spaces before the other lines
+     * @param tab1  spaces before the ">>> Signer" line
+     * @param tab2  spaces before the other lines
      * @param certs the signer cert
-     * @param ts the timestamp, can be null
+     * @param ts    the timestamp, can be null
      * @return the info as a string
      */
     private String certsAndTSInfo(
@@ -2060,7 +2060,7 @@ public class Main {
             }
         }
         if (certs.size() == 1
-                && KeyStoreUtil.isSelfSigned((X509Certificate)certs.get(0))) {
+                && KeyStoreUtil.isSelfSigned((X509Certificate) certs.get(0))) {
             signerSelfSigned = true;
         }
 
@@ -2082,7 +2082,7 @@ public class Main {
                     while (aliases.hasMoreElements()) {
                         String a = aliases.nextElement();
                         try {
-                            trustedCerts.add((X509Certificate)caks.getCertificate(a));
+                            trustedCerts.add((X509Certificate) caks.getCertificate(a));
                         } catch (Exception e2) {
                             // ignore, when a SecretkeyEntry does not include a cert
                         }
@@ -2136,7 +2136,7 @@ public class Main {
                 while (aliases.hasMoreElements()) {
                     String a = aliases.nextElement();
                     try {
-                        X509Certificate c = (X509Certificate)store.getCertificate(a);
+                        X509Certificate c = (X509Certificate) store.getCertificate(a);
                         // Only add TrustedCertificateEntry and self-signed
                         // PrivateKeyEntry
                         if (store.isCertificateEntry(a) ||
@@ -2205,11 +2205,12 @@ public class Main {
 
     /**
      * Check if userCert is designed to be a code signer
+     *
      * @param userCert the certificate to be examined
-     * @param bad 3 booleans to show if the KeyUsage, ExtendedKeyUsage,
-     *            NetscapeCertType has codeSigning flag turned on.
-     *            If null, the class field badKeyUsage, badExtendedKeyUsage,
-     *            badNetscapeCertType will be set.
+     * @param bad      3 booleans to show if the KeyUsage, ExtendedKeyUsage,
+     *                 NetscapeCertType has codeSigning flag turned on.
+     *                 If null, the class field badKeyUsage, badExtendedKeyUsage,
+     *                 badNetscapeCertType will be set.
      */
     void checkCertUsage(X509Certificate userCert, boolean[] bad) {
 
@@ -2313,12 +2314,12 @@ public class Main {
             }
 
             certChain = new X509Certificate[cs.length];
-            for (int i=0; i<cs.length; i++) {
+            for (int i = 0; i < cs.length; i++) {
                 if (!(cs[i] instanceof X509Certificate)) {
                     error(rb.getString
                             ("found.non.X.509.certificate.in.signer.s.chain"));
                 }
-                certChain[i] = (X509Certificate)cs[i];
+                certChain[i] = (X509Certificate) cs[i];
             }
 
             try {
@@ -2352,18 +2353,18 @@ public class Main {
             Object[] source = {alias};
             error(form.format(source));
         } else {
-            privateKey = (PrivateKey)key;
+            privateKey = (PrivateKey) key;
         }
     }
 
     void error(String message) {
-        System.out.println(rb.getString("jarsigner.")+message);
+        System.out.println(rb.getString("jarsigner.") + message);
         System.exit(1);
     }
 
 
     void error(String message, Throwable e) {
-        System.out.println(rb.getString("jarsigner.")+message);
+        System.out.println(rb.getString("jarsigner.") + message);
         if (debug) {
             e.printStackTrace();
         }
@@ -2423,7 +2424,7 @@ public class Main {
                     }
                 }
                 if (e instanceof ValidatorException) {
-                    ValidatorException ve = (ValidatorException)e;
+                    ValidatorException ve = (ValidatorException) e;
                     if (ve.getErrorType() == ValidatorException.T_EE_EXTENSIONS &&
                             (badKeyUsage || badExtendedKeyUsage || badNetscapeCertType)) {
                         // We already have badKeyUsage, badExtendedKeyUsage
@@ -2448,7 +2449,7 @@ public class Main {
                 return pass;
             }
         } catch (IOException ioe) {
-            error(rb.getString("unable.to.read.password.")+ioe.getMessage());
+            error(rb.getString("unable.to.read.password.") + ioe.getMessage());
         }
         // this shouldn't happen
         return null;

@@ -43,10 +43,10 @@ public class JarSignerException extends RuntimeException {
      * this {@code JarSignerException}'s detail message.
      *
      * @param message the detail message (which is saved for later retrieval
-     *      by the {@link #getMessage()} method).
-     * @param cause the cause (which is saved for later retrieval by the
-     *      {@link #getCause()} method).  (A {@code null} value is permitted,
-     *      and indicates that the cause is nonexistent or unknown.)
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A {@code null} value is permitted,
+     *                and indicates that the cause is nonexistent or unknown.)
      */
     public JarSignerException(String message, Throwable cause) {
         super(message, cause);

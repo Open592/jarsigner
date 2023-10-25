@@ -28,7 +28,6 @@ package com.open592.jarsigner;
 /**
  * <p> This class represents the <code>ResourceBundle</code>
  * for JarSigner.
- *
  */
 public class Resources extends java.util.ListResourceBundle {
 
@@ -143,7 +142,7 @@ public class Resources extends java.util.ListResourceBundle {
             {".X.not.signed.by.specified.alias.es.",
                     "  X = not signed by specified alias(es)"},
             {"no.manifest.", "no manifest."},
-            {".Signature.related.entries.","(Signature related entries)"},
+            {".Signature.related.entries.", "(Signature related entries)"},
             {".Unsigned.entries.", "(Unsigned entries)"},
             {"jar.is.unsigned",
                     "jar is unsigned."},

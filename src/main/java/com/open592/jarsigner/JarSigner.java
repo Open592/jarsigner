@@ -67,7 +67,7 @@ import java.util.zip.ZipOutputStream;
  * An immutable utility class to sign a jar file.
  * <p>
  * A caller creates a {@code JarSigner.Builder} object, (optionally) sets
- * some parameters, and calls {@link com.open592.jarsigner.JarSigner.Builder#build build} to create
+ * some parameters, and calls {@link Builder#build build} to create
  * a {@code JarSigner} object. This {@code JarSigner} object can then
  * be used to sign a jar file.
  * <p>
@@ -114,7 +114,7 @@ public final class JarSigner {
         Provider sigProvider;
         URI tsaUrl;
         String signerName;
-        BiConsumer<String,String> handler;
+        BiConsumer<String, String> handler;
 
         // Implementation-specific properties:
         String tSAPolicyID;
@@ -149,11 +149,11 @@ public final class JarSigner {
          * a certification path.
          *
          * @param privateKey the private key of the signer.
-         * @param certPath the certification path of the signer.
+         * @param certPath   the certification path of the signer.
          * @throws IllegalArgumentException if {@code certPath} is empty, or
-         *      the {@code privateKey} algorithm does not match the algorithm
-         *      of the {@code PublicKey} in the end entity certificate
-         *      (the first certificate in {@code certPath}).
+         *                                  the {@code privateKey} algorithm does not match the algorithm
+         *                                  of the {@code PublicKey} in the end entity certificate
+         *                                  (the first certificate in {@code certPath}).
          */
         public Builder(PrivateKey privateKey, CertPath certPath) {
             List<? extends Certificate> certs = certPath.getCertificates();
@@ -183,14 +183,14 @@ public final class JarSigner {
          * will be used.
          *
          * @param algorithm the standard name of the algorithm. See
-         *      the {@code MessageDigest} section in the <a href=
-         *      "{@docRoot}/../specs/security/standard-names.html#messagedigest-algorithms">
-         *      Java Cryptography Architecture Standard Algorithm Name
-         *      Documentation</a> for information about standard algorithm names.
+         *                  the {@code MessageDigest} section in the <a href=
+         *                  "{@docRoot}/../specs/security/standard-names.html#messagedigest-algorithms">
+         *                  Java Cryptography Architecture Standard Algorithm Name
+         *                  Documentation</a> for information about standard algorithm names.
          * @return the {@code JarSigner.Builder} itself.
          * @throws NoSuchAlgorithmException if {@code algorithm} is not available.
          */
-        public com.open592.jarsigner.JarSigner.Builder digestAlgorithm(String algorithm) throws NoSuchAlgorithmException {
+        public Builder digestAlgorithm(String algorithm) throws NoSuchAlgorithmException {
             MessageDigest.getInstance(Objects.requireNonNull(algorithm));
             this.digestalgs.add(algorithm);
             this.digestProvider = null;
@@ -203,16 +203,16 @@ public final class JarSigner {
          * returned by {@link #getDefaultDigestAlgorithm} will be used.
          *
          * @param algorithm the standard name of the algorithm. See
-         *      the {@code MessageDigest} section in the <a href=
-         *      "{@docRoot}/../specs/security/standard-names.html#messagedigest-algorithms">
-         *      Java Cryptography Architecture Standard Algorithm Name
-         *      Documentation</a> for information about standard algorithm names.
-         * @param provider the provider.
+         *                  the {@code MessageDigest} section in the <a href=
+         *                  "{@docRoot}/../specs/security/standard-names.html#messagedigest-algorithms">
+         *                  Java Cryptography Architecture Standard Algorithm Name
+         *                  Documentation</a> for information about standard algorithm names.
+         * @param provider  the provider.
          * @return the {@code JarSigner.Builder} itself.
          * @throws NoSuchAlgorithmException if {@code algorithm} is not
-         *      available in the specified provider.
+         *                                  available in the specified provider.
          */
-        public com.open592.jarsigner.JarSigner.Builder digestAlgorithm(String algorithm, Provider provider)
+        public Builder digestAlgorithm(String algorithm, Provider provider)
                 throws NoSuchAlgorithmException {
             MessageDigest.getInstance(
                     Objects.requireNonNull(algorithm),
@@ -229,16 +229,16 @@ public final class JarSigner {
          * will be used.
          *
          * @param algorithm the standard name of the algorithm. See
-         *      the {@code Signature} section in the <a href=
-         *      "{@docRoot}/../specs/security/standard-names.html#signature-algorithms">
-         *      Java Cryptography Architecture Standard Algorithm Name
-         *      Documentation</a> for information about standard algorithm names.
+         *                  the {@code Signature} section in the <a href=
+         *                  "{@docRoot}/../specs/security/standard-names.html#signature-algorithms">
+         *                  Java Cryptography Architecture Standard Algorithm Name
+         *                  Documentation</a> for information about standard algorithm names.
          * @return the {@code JarSigner.Builder} itself.
          * @throws NoSuchAlgorithmException if {@code algorithm} is not available.
          * @throws IllegalArgumentException if {@code algorithm} is not
-         *      compatible with the algorithm of the signer's private key.
+         *                                  compatible with the algorithm of the signer's private key.
          */
-        public com.open592.jarsigner.JarSigner.Builder signatureAlgorithm(String algorithm)
+        public Builder signatureAlgorithm(String algorithm)
                 throws NoSuchAlgorithmException {
             // Check availability
             Signature.getInstance(Objects.requireNonNull(algorithm));
@@ -255,18 +255,18 @@ public final class JarSigner {
          * key will be used.
          *
          * @param algorithm the standard name of the algorithm. See
-         *      the {@code Signature} section in the <a href=
-         *      "{@docRoot}/../specs/security/standard-names.html#signature-algorithms">
-         *      Java Cryptography Architecture Standard Algorithm Name
-         *      Documentation</a> for information about standard algorithm names.
+         *                  the {@code Signature} section in the <a href=
+         *                  "{@docRoot}/../specs/security/standard-names.html#signature-algorithms">
+         *                  Java Cryptography Architecture Standard Algorithm Name
+         *                  Documentation</a> for information about standard algorithm names.
          * @param provider  the provider.
          * @return the {@code JarSigner.Builder} itself.
          * @throws NoSuchAlgorithmException if {@code algorithm} is not
-         *      available in the specified provider.
+         *                                  available in the specified provider.
          * @throws IllegalArgumentException if {@code algorithm} is not
-         *      compatible with the algorithm of the signer's private key.
+         *                                  compatible with the algorithm of the signer's private key.
          */
-        public com.open592.jarsigner.JarSigner.Builder signatureAlgorithm(String algorithm, Provider provider)
+        public Builder signatureAlgorithm(String algorithm, Provider provider)
                 throws NoSuchAlgorithmException {
             // Check availability
             Signature.getInstance(
@@ -284,7 +284,7 @@ public final class JarSigner {
          * @param uri the URI.
          * @return the {@code JarSigner.Builder} itself.
          */
-        public com.open592.jarsigner.JarSigner.Builder tsa(URI uri) {
+        public Builder tsa(URI uri) {
             this.tsaUrl = Objects.requireNonNull(uri);
             return this;
         }
@@ -298,28 +298,16 @@ public final class JarSigner {
          * @param name the signer name.
          * @return the {@code JarSigner.Builder} itself.
          * @throws IllegalArgumentException if {@code name} is empty or has
-         *      a size bigger than 8, or it contains characters not from the
-         *      set "a-zA-Z0-9_-".
+         *                                  a size bigger than 8, or it contains characters not from the
+         *                                  set "a-zA-Z0-9_-".
          */
-        public com.open592.jarsigner.JarSigner.Builder signerName(String name) {
+        public Builder signerName(String name) {
             if (name.isEmpty() || name.length() > 8) {
                 throw new IllegalArgumentException("Name too long");
             }
 
-            name = name.toUpperCase(Locale.ENGLISH);
-
-            for (int j = 0; j < name.length(); j++) {
-                char c = name.charAt(j);
-                if (!
-                        ((c >= 'A' && c <= 'Z') ||
-                                (c >= '0' && c <= '9') ||
-                                (c == '-') ||
-                                (c == '_'))) {
-                    throw new IllegalArgumentException(
-                            "Invalid characters in name");
-                }
-            }
             this.signerName = name;
+
             return this;
         }
 
@@ -335,7 +323,7 @@ public final class JarSigner {
          * @param handler the event handler.
          * @return the {@code JarSigner.Builder} itself.
          */
-        public com.open592.jarsigner.JarSigner.Builder eventHandler(BiConsumer<String,String> handler) {
+        public Builder eventHandler(BiConsumer<String, String> handler) {
             this.handler = Objects.requireNonNull(handler);
             return this;
         }
@@ -344,6 +332,13 @@ public final class JarSigner {
          * Sets an additional implementation-specific property indicated by
          * the specified key.
          *
+         * @param key   the name of the property.
+         * @param value the value of the property.
+         * @return the {@code JarSigner.Builder} itself.
+         * @throws UnsupportedOperationException if the key is not supported
+         *                                       by this implementation.
+         * @throws IllegalArgumentException      if the value is not accepted as
+         *                                       a legal value for this key.
          * @implNote This implementation supports the following properties:
          * <ul>
          * <li>"tsaDigestAlg": algorithm of digest data in the timestamping
@@ -358,16 +353,8 @@ public final class JarSigner {
          * manifest, "false" otherwise. Default "false".
          * </ul>
          * All property names are case-insensitive.
-         *
-         * @param key the name of the property.
-         * @param value the value of the property.
-         * @return the {@code JarSigner.Builder} itself.
-         * @throws UnsupportedOperationException if the key is not supported
-         *      by this implementation.
-         * @throws IllegalArgumentException if the value is not accepted as
-         *      a legal value for this key.
          */
-        public com.open592.jarsigner.JarSigner.Builder setProperty(String key, String value) {
+        public Builder setProperty(String key, String value) {
             Objects.requireNonNull(key);
             Objects.requireNonNull(value);
             switch (key.toLowerCase(Locale.US)) {
@@ -417,10 +404,9 @@ public final class JarSigner {
         /**
          * Gets the default digest algorithm.
          *
+         * @return the default digest algorithm.
          * @implNote This implementation returns "SHA-256". The value may
          * change in the future.
-         *
-         * @return the default digest algorithm.
          */
         public static String getDefaultDigestAlgorithm() {
             return "SHA-256";
@@ -431,6 +417,12 @@ public final class JarSigner {
          * For example, SHA256withRSA for a 2048-bit RSA key, and
          * SHA384withECDSA for a 384-bit EC key.
          *
+         * @param key the private key.
+         * @return the default signature algorithm. Returns null if a default
+         * signature algorithm cannot be found. In this case,
+         * {@link #signatureAlgorithm} must be called to specify a
+         * signature algorithm. Otherwise, the {@link #build} method
+         * will throw an {@link IllegalArgumentException}.
          * @implNote This implementation makes use of comparable strengths
          * as defined in Tables 2 and 3 of NIST SP 800-57 Part 1-Rev.4.
          * Specifically, if a DSA or RSA key with a key size greater than 7680
@@ -440,13 +432,6 @@ public final class JarSigner {
          * EC key has a key size greater than or equal to 384 bits, SHA-384 will
          * be used. Otherwise, SHA-256 will be used. The value may
          * change in the future.
-         *
-         * @param key the private key.
-         * @return the default signature algorithm. Returns null if a default
-         *      signature algorithm cannot be found. In this case,
-         *      {@link #signatureAlgorithm} must be called to specify a
-         *      signature algorithm. Otherwise, the {@link #build} method
-         *      will throw an {@link IllegalArgumentException}.
          */
         public static String getDefaultSignatureAlgorithm(PrivateKey key) {
             // Attention: sync the spec with SignatureUtil::ecStrength and
@@ -466,11 +451,11 @@ public final class JarSigner {
          *
          * @return the {@code JarSigner} object.
          * @throws IllegalArgumentException if a signature algorithm is not
-         *      set and cannot be derived from the private key using the
-         *      {@link #getDefaultSignatureAlgorithm} method.
+         *                                  set and cannot be derived from the private key using the
+         *                                  {@link #getDefaultSignatureAlgorithm} method.
          */
-        public com.open592.jarsigner.JarSigner build() {
-            return new com.open592.jarsigner.JarSigner(this);
+        public JarSigner build() {
+            return new JarSigner(this);
         }
     }
 
@@ -494,7 +479,7 @@ public final class JarSigner {
     private final Provider sigProvider;
     private final URI tsaUrl;
     private final String signerName;
-    private final BiConsumer<String,String> handler;
+    private final BiConsumer<String, String> handler;
 
     // Implementation-specific properties:
     private final String tSAPolicyID;
@@ -502,27 +487,26 @@ public final class JarSigner {
     private final boolean sectionsonly; // do not "sign" the whole manifest
     private final boolean internalsf; // include the .SF inside the PKCS7 block
 
-    @Deprecated(since="16", forRemoval=true)
+    @Deprecated(since = "16", forRemoval = true)
     private final String altSignerPath;
-    @Deprecated(since="16", forRemoval=true)
+    @Deprecated(since = "16", forRemoval = true)
     private final String altSigner;
     private boolean extraAttrsDetected;
 
-    private JarSigner(com.open592.jarsigner.JarSigner.Builder builder) {
+    private JarSigner(Builder builder) {
 
         this.privateKey = builder.privateKey;
         this.certChain = builder.certChain;
         if (builder.digestalgs != null) {
             this.digestalgs.addAll(builder.digestalgs);
         } else {
-            this.digestalgs.add(JarSigner.Builder.getDefaultDigestAlgorithm());
+            this.digestalgs.add(Builder.getDefaultDigestAlgorithm());
         }
         this.digestProvider = builder.digestProvider;
         if (builder.sigalg != null) {
             this.sigalg = builder.sigalg;
         } else {
-            this.sigalg = com.open592.jarsigner.JarSigner.Builder
-                    .getDefaultSignatureAlgorithm(privateKey);
+            this.sigalg = Builder.getDefaultSignatureAlgorithm(privateKey);
             if (this.sigalg == null) {
                 throw new IllegalArgumentException(
                         "No signature alg for " + privateKey.getAlgorithm());
@@ -531,18 +515,10 @@ public final class JarSigner {
         this.sigProvider = builder.sigProvider;
         this.tsaUrl = builder.tsaUrl;
 
-        if (builder.signerName == null) {
-            this.signerName = "SIGNER";
-        } else {
-            this.signerName = builder.signerName;
-        }
+        this.signerName = Objects.requireNonNullElse(builder.signerName, "SIGNER");
         this.handler = builder.handler;
 
-        if (builder.tSADigestAlg != null) {
-            this.tSADigestAlg = builder.tSADigestAlg;
-        } else {
-            this.tSADigestAlg = com.open592.jarsigner.JarSigner.Builder.getDefaultDigestAlgorithm();
-        }
+        this.tSADigestAlg = Objects.requireNonNullElseGet(builder.tSADigestAlg, Builder::getDefaultDigestAlgorithm);
         this.tSAPolicyID = builder.tSAPolicyID;
         this.sectionsonly = builder.sectionsonly;
         this.internalsf = builder.internalsf;
@@ -567,7 +543,7 @@ public final class JarSigner {
      * it be promptly closed in this case.
      *
      * @param file the file to sign.
-     * @param os the output stream.
+     * @param os   the output stream.
      * @throws JarSignerException if the signing fails.
      */
     public void sign(ZipFile file, OutputStream os) {
@@ -635,14 +611,13 @@ public final class JarSigner {
      * indicated by the specified key. If a property is not set but has a
      * default value, the default value will be returned.
      *
-     * @implNote See {@link com.open592.jarsigner.JarSigner.Builder#setProperty} for a list of
-     * properties this implementation supports. All property names are
-     * case-insensitive.
-     *
      * @param key the name of the property.
      * @return the value for the property.
      * @throws UnsupportedOperationException if the key is not supported
-     *      by this implementation.
+     *                                       by this implementation.
+     * @implNote See {@link Builder#setProperty} for a list of
+     * properties this implementation supports. All property names are
+     * case-insensitive.
      */
     public String getProperty(String key) {
         Objects.requireNonNull(key);
@@ -698,18 +673,17 @@ public final class JarSigner {
             mfRawBytes = zipFile.getInputStream(mfFile).readAllBytes();
             manifest.read(new ByteArrayInputStream(mfRawBytes));
 
-            // Append comments to existing manifest file
+            // Append comments to existing manifest file and updated "Created-By" attribute.
             Attributes mattr = manifest.getMainAttributes();
+
+            mattr.putValue("Created-By", "Signtool (signtool 1.3)");
             mattr.putValue("Comments", "PLEASE DO NOT EDIT THIS FILE. YOU WILL BREAK IT.");
         } else {
             // Create new manifest
             Attributes mattr = manifest.getMainAttributes();
-            mattr.putValue(Attributes.Name.MANIFEST_VERSION.toString(),
-                    "1.0");
-            String javaVendor = System.getProperty("java.vendor");
-            String jdkVersion = System.getProperty("java.version");
-            mattr.putValue("Created-By", jdkVersion + " (" + javaVendor
-                    + ")");
+
+            mattr.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
+            mattr.putValue("Created-By", "Signtool (signtool 1.3)");
             mattr.putValue("Comments", "PLEASE DO NOT EDIT THIS FILE. YOU WILL BREAK IT.");
             mfFile = new ZipEntry(JarFile.MANIFEST_NAME);
         }
@@ -742,8 +716,7 @@ public final class JarSigner {
                 if (SignatureFileVerifier.isBlockOrSF(zeNameUp)
                         // no need to preserve binary manifest portions
                         // if the only existing signature will be replaced
-                        && !zeNameUp.startsWith(com.open592.jarsigner.JarSigner.SignatureFile
-                        .getBaseSignatureFilesName(signerName))) {
+                        && !zeNameUp.startsWith(SignatureFile.getBaseSignatureFilesName(signerName))) {
                     wasSigned = true;
                 }
 
@@ -812,7 +785,7 @@ public final class JarSigner {
                 }
 
                 // individual sections
-                for (Map.Entry<String,Attributes> entry :
+                for (Map.Entry<String, Attributes> entry :
                         manifest.getEntries().entrySet()) {
                     String sectionName = entry.getKey();
                     Attributes entryAtts = entry.getValue();
@@ -845,7 +818,7 @@ public final class JarSigner {
 
         // Calculate SignatureFile (".SF") and SignatureBlockFile
         ManifestDigester manDig = new ManifestDigester(mfRawBytes);
-        com.open592.jarsigner.JarSigner.SignatureFile sf = new com.open592.jarsigner.JarSigner.SignatureFile(digests, manifest, manDig,
+        SignatureFile sf = new JarSigner.SignatureFile(digests, manifest, manDig,
                 signerName, sectionsonly);
 
         byte[] block;
@@ -883,7 +856,7 @@ public final class JarSigner {
 
             @SuppressWarnings("removal")
             ContentSignerParameters params =
-                    new com.open592.jarsigner.JarSigner.JarSignerParameters(null, tsaUrl, tSAPolicyID,
+                    new JarSigner.JarSignerParameters(null, tsaUrl, tSAPolicyID,
                             tSADigestAlg, signature,
                             signer.getAlgorithm(), certChain, content, zipFile);
             @SuppressWarnings("removal")
@@ -936,7 +909,7 @@ public final class JarSigner {
             if (!ze.getName().equalsIgnoreCase(JarFile.MANIFEST_NAME)
                     && !ze.getName().equalsIgnoreCase(sfFilename)
                     && !ze.getName().equalsIgnoreCase(bkFilename)) {
-                if (ze.getName().startsWith(com.open592.jarsigner.JarSigner.SignatureFile
+                if (ze.getName().startsWith(SignatureFile
                         .getBaseSignatureFilesName(signerName))
                         && SignatureFileVerifier.isBlockOrSF(ze.getName())) {
                     if (handler != null) {
@@ -1163,14 +1136,11 @@ public final class JarSigner {
 
             this.baseName = baseName;
 
-            String version = System.getProperty("java.version");
-            String javaVendor = System.getProperty("java.vendor");
-
             sf = new Manifest();
             Attributes mattr = sf.getMainAttributes();
 
             mattr.putValue(Attributes.Name.SIGNATURE_VERSION.toString(), "1.0");
-            mattr.putValue("Created-By", version + " (" + javaVendor + ")");
+            mattr.putValue("Created-By", "Signtool (signtool 1.3)");
             mattr.putValue("Comments", "PLEASE DO NOT EDIT THIS FILE. YOU WILL BREAK IT.");
 
             // Record the digest algorithms
@@ -1179,7 +1149,7 @@ public final class JarSigner {
             mattr.putValue("Digest-Algorithms", digestAlgorithmsAttribute);
 
             if (!sectionsonly) {
-                for (MessageDigest digest: digests) {
+                for (MessageDigest digest : digests) {
                     mattr.putValue(digest.getAlgorithm() + "-Digest",
                             Base64.getEncoder().encodeToString(
                                     md.manifestDigest(digest)));
@@ -1188,14 +1158,14 @@ public final class JarSigner {
 
             // go through the manifest entries and create the digests
             Map<String, Attributes> entries = sf.getEntries();
-            for (String name: mf.getEntries().keySet()) {
+            for (String name : mf.getEntries().keySet()) {
                 ManifestDigester.Entry mde = md.get(name, false);
                 if (mde != null) {
                     Attributes attr = new Attributes();
                     // Also place the digest algorithms with each entry
                     attr.putValue("Digest-Algorithms", digestAlgorithmsAttribute);
 
-                    for (MessageDigest digest: digests) {
+                    for (MessageDigest digest : digests) {
                         attr.putValue(digest.getAlgorithm() + "-Digest",
                                 Base64.getEncoder().encodeToString(
                                         mde.digest(digest)));
@@ -1227,7 +1197,7 @@ public final class JarSigner {
     }
 
     @SuppressWarnings("removal")
-    @Deprecated(since="16", forRemoval=true)
+    @Deprecated(since = "16", forRemoval = true)
     class JarSignerParameters implements ContentSignerParameters {
 
         private String[] args;

@@ -13,7 +13,7 @@ application {
         "--add-opens=java.base/sun.security.util=ALL-UNNAMED",
         "--add-opens=java.base/sun.security.x509=ALL-UNNAMED",
         "--add-opens=java.base/sun.security.validator=ALL-UNNAMED",
-        )
+    )
 }
 
 group = "org.example"
